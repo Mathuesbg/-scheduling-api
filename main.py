@@ -16,7 +16,7 @@ name = input("Digite seu nome: ")
 email = input("Digite seu email: ")
 date = input("Digite a data em que deseja agendar (YYYY-MM-DD): ")
 
-endpoint = "https://api.cal.com//v2/slots"
+endpoint = "https://api.cal.com/v2/slots"
 query_string = f"?eventTypeSlug=reuniao&username={USERNAME}&start={date}&end={date}&timeZone=America/Sao_Paulo"
 url = endpoint + query_string
 
