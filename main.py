@@ -6,6 +6,7 @@ from api_consumer import Scheduling
 schedule = Scheduling()
 
 while True:
+    
     name = input("Digite seu nome: ").strip()
     os.system('cls')
 
@@ -20,6 +21,7 @@ while True:
     break
 
 while True:
+
     email = input("Digite seu email: ").strip()
     os.system('cls')
 
@@ -40,8 +42,8 @@ while True:
 while True:
     date = input("Digite a data em que deseja agendar (YYYY-MM-DD): ").strip()
     os.system('cls')
+    
     try:
-        # Tenta converter a string pra uma data real
         _data = datetime.strptime(date, "%Y-%m-%d")
         break
     
@@ -60,5 +62,5 @@ while True:
         continue
     break
 
-response = schedule.booking(selected, name, email)
+schedule.booking(selected, name, email)
 
