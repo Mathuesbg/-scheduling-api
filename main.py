@@ -1,58 +1,64 @@
-import requests
 import os
-from dotenv import load_dotenv
+from datetime import datetime
+from api_consumer import Scheduling
 
 
-load_dotenv()
+schedule = Scheduling()
 
-headers = {
-    "Authorization": os.environ.get("API_KEY"),
-    "cal-api-version": "2024-09-04"
-}
+while True:
+    name = input("Digite seu nome: ").strip()
+    os.system('cls')
 
-USERNAME = os.environ.get("USER_NAME")
+    if len(name) < 3:
+        print("Nome muito curto, precisa ter pelo menos 3 letras.")
+        continue
 
-name = input("Digite seu nome: ")
-email = input("Digite seu email: ")
-date = input("Digite a data em que deseja agendar (YYYY-MM-DD): ")
+    if not all(c.isalpha() or c.isspace() for c in name):
+        print("Nome só pode conter letras e espaços.")
+        continue
 
-endpoint = "https://api.cal.com/v2/slots"
-query_string = f"?eventTypeSlug=reuniao&username={USERNAME}&start={date}&end={date}&timeZone=America/Sao_Paulo"
-url = endpoint + query_string
+    break
 
-response = requests.get(url, headers=headers)
-dates = response.json()["data"][date]
+while True:
+    email = input("Digite seu email: ").strip()
+    os.system('cls')
 
-menu = {}
+    if "@" not in email or "." not in email:
+        print("Email inválido. Precisa conter '@' e '.'")
+        continue
 
-print("Horarios disponiveis: ")
+    if email.count("@") != 1:
+        print("Email inválido. Só pode ter um '@'")
+        continue
 
-print()
-for index, slot in enumerate(dates):
-    menu[index] = slot['start']
-    print(f"({index}) = {menu[index]}")
+    if email.startswith("@") or email.endswith("@"):
+        print("Email inválido. Não pode começar ou terminar com '@'")
+        continue
 
-print()
+    break
 
-selected = int(input("Escolha um horario a partir do indice: "))
+while True:
+    date = input("Digite a data em que deseja agendar (YYYY-MM-DD): ").strip()
+    os.system('cls')
+    try:
+        # Tenta converter a string pra uma data real
+        _data = datetime.strptime(date, "%Y-%m-%d")
+        break
+    
+    except ValueError:
+        print("Formato inválido! Use o formato YYYY-MM-DD, tipo: 2025-04-07.")
 
-url = "https://api.cal.com/v2/bookings"
 
-headers = {
-    "Authorization": os.environ.get("API_KEY"),
-    "cal-api-version": "2024-08-13",
-    "Content-Type" : "application/json"
-}
+slots = schedule.get_avaliable_slots(date)
+schedule.show_slots(slots)
 
-payload = {
-    "eventTypeId": 2208568,
-    'start': menu[selected],
-    "attendee" : {
-        "timeZone" : "America/Sao_Paulo",
-        "email" : email,
-        "name" : name 
-    }   
-}   
+while True:
+    selected = int(input("Escolha um horario a partir do indice: "))
+    os.system('cls')
+    if selected < 0 or selected >= len(slots):
+        print("Escolha um indice valido!")
+        continue
+    break
 
-response = requests.post(url, json=payload, headers=headers)
-print(response.status_code)
+response = schedule.booking(selected, name, email)
+
