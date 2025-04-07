@@ -5,51 +5,65 @@ from api_consumer import Scheduling
 
 schedule = Scheduling()
 
-while True:
-    
-    name = input("Digite seu nome: ").strip()
-    os.system('cls')
 
+def name_is_valid(name):
+    os.system('cls')
     if len(name) < 3:
         print("Nome muito curto, precisa ter pelo menos 3 letras.")
-        continue
+        return False
 
     if not all(c.isalpha() or c.isspace() for c in name):
         print("Nome só pode conter letras e espaços.")
-        continue
+        return False
 
-    break
+    return True
 
-while True:
 
-    email = input("Digite seu email: ").strip()
+def email_is_valid(email):
     os.system('cls')
 
     if "@" not in email or "." not in email:
         print("Email inválido. Precisa conter '@' e '.'")
-        continue
+        return False
 
     if email.count("@") != 1:
         print("Email inválido. Só pode ter um '@'")
-        continue
+        return False
+
 
     if email.startswith("@") or email.endswith("@"):
         print("Email inválido. Não pode começar ou terminar com '@'")
-        continue
+        return False
 
-    break
+    return True
 
-while True:
-    date = input("Digite a data em que deseja agendar (YYYY-MM-DD): ").strip()
+
+def date_is_valid(date):
     os.system('cls')
-    
+
     try:
         _data = datetime.strptime(date, "%Y-%m-%d")
-        break
+        return True
     
     except ValueError:
         print("Formato inválido! Use o formato YYYY-MM-DD, tipo: 2025-04-07.")
+        return False
 
+
+def get_valid_input(input_text, validator):
+
+    while True:
+
+        value = input(input_text).strip()
+
+        if validator(value):
+            return value
+
+
+
+name = get_valid_input("Digite seu nome: ", name_is_valid)
+email = get_valid_input("Digite seu email: ", email_is_valid)
+date = get_valid_input("Digite a data em que deseja agendar (YYYY-MM-DD): ", date_is_valid)
 
 slots = schedule.get_avaliable_slots(date)
 schedule.show_slots(slots)
