@@ -43,8 +43,13 @@ def date_is_valid(date):
 
     try:
         _data = datetime.strptime(date, "%Y-%m-%d")
+
+        if _data.date() < datetime.today().date():
+            print("Não é possível agendar para uma data no passado!")
+            return False
+
         return True
-    
+
     except ValueError:
         print("Formato inválido! Use o formato YYYY-MM-DD, tipo: 2025-04-07.")
         return False
@@ -66,8 +71,29 @@ email = get_valid_input("Digite seu email: ", email_is_valid)
 date = get_valid_input("Digite a data em que deseja agendar (YYYY-MM-DD): ", date_is_valid)
 
 slots = schedule.get_avaliable_slots(date)
-schedule.show_slots(slots)
 
+
+if not slots : 
+    print(f"Não há horários diponiveis para o dia {date}")
+
+    date = get_valid_input("Digite a data em que deseja agendar (YYYY-MM-DD): ", date_is_valid)
+    slots = schedule.get_avaliable_slots(date)
+
+menu = schedule.get_slots_menu(slots)
+
+
+print("-" * 50)
+
+for slot in menu:
+    
+    time = menu[slot].split("T")[1].split(".")[0]
+    print(f"({slot}) : {time}")
+
+
+print("-" * 50)
+
+
+    
 while True:
     selected = int(input("Escolha um horario a partir do indice: "))
     os.system('cls')
@@ -76,5 +102,5 @@ while True:
         continue
     break
 
-schedule.booking(selected, name, email)
-
+result = schedule.booking(selected, name, email)
+print(result)

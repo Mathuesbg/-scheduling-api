@@ -9,7 +9,7 @@ class Scheduling:
     def __init__(self):
         self.username = os.environ.get("USER_NAME")
         self.auth = {"Authorization": os.environ.get("API_KEY")}
-        self.slots_menu = {}
+        self.__slots_menu = {}
 
 
     def get_avaliable_slots(self, date):
@@ -30,24 +30,17 @@ class Scheduling:
         response = requests.get(url, headers=headers, params=params)
 
         if response.status_code == 200:
-            return response.json()["data"].get(date, [])
+            return response.json()["data"].get(date)
 
         else: 
-            print("Error : ", response.text)
+            return [response.status_code, response.text]
     
-    def show_slots(self, slots):
-        print("Horarios disponiveis: ")
+    def get_slots_menu(self, slots):
 
-        print()
         for index, slot in enumerate(slots):
-            self.slots_menu[index] = slot['start']
+            self.__slots_menu[index] = slot['start']
 
-            time = str(self.slots_menu[index])
-            time = time.split("T")[1].split(".")[0]
-
-            print(f"({index}) = {time}")
-        print()
-
+        return self.__slots_menu
     
     def booking(self, selected, name, email ):
         url = "https://api.cal.com/v2/bookings"
@@ -59,7 +52,7 @@ class Scheduling:
 
         payload = {
             "eventTypeId": 2208568,
-            'start': self.slots_menu[selected],
+            'start': self.__slots_menu[selected],
             "attendee" : {
                 "timeZone" : "America/Sao_Paulo",
                 "email" : email,
@@ -70,6 +63,6 @@ class Scheduling:
         response = requests.post(url, json=payload, headers=headers)
         
         if response.status_code >= 200 and response.status_code <= 299:
-            print("Horario agendado com sucesso!")
+            return f"Horario agendado com sucesso! {response.status_code}"
         else:
-            print(f"Error {response.status_code}: {response.text}")
+            return f"Error : {response.status_code}"
