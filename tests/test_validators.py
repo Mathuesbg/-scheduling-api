@@ -4,7 +4,6 @@ import validators
 
 class TestValidators(TestCase):
     
-    
 
     def test_name_validator_returns_true_if_name_is_valid(self):
         name = "John Doe"
@@ -96,10 +95,11 @@ class TestValidators(TestCase):
 
     def test_index_validator_returns_true_if_index_is_valid(self):
 
-        menu = [
-            { 0 : "2025-04-07T14:30:00.000Z"},
-            { 1 : "2025-04-07T14:45:00.000Z"},
-            ]
+        menu = {
+            0 : "2025-04-07T14:30:00.000Z",
+            1 : "2025-04-07T14:45:00.000Z"
+            }
+            
         
         index = "1"
 

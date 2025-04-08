@@ -1,9 +1,9 @@
-def get_valid_input(input_text, validator, *args):
+def get_valid_input(input_text, validator):
 
     while True:
         value = input(input_text).strip()
 
-        if validator(value, *args):
+        if validator(value):
             return value
 
 

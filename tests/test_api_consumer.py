@@ -1,6 +1,5 @@
 from unittest import TestCase
 import api_consumer
-import main
 from unittest.mock import patch
 
 class ApiConsumerTest(TestCase):
