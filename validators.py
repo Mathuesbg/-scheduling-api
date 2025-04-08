@@ -51,13 +51,13 @@ def date_is_valid(date):
         return False
     
 
-def selected_is_valid(selected, menu):
+def index_is_valid(index, menu):
     os.system('cls')
 
     try:
-        selected = int(selected)
+        index = int(index)
 
-        if selected < 0 or selected >= len(menu):
+        if index < 0 or index >= len(menu):
             print("Escolha um indice dentro do range!")
             return False
         
@@ -68,28 +68,3 @@ def selected_is_valid(selected, menu):
     return True
 
 
-def get_valid_input(input_text, validator, *args):
-
-    while True:
-        value = input(input_text).strip()
-
-        if validator(value, *args):
-            return value
-
-
-
-def get_valid_index_input(input_text, validator, menu):
-
-    while True:
-
-        print("horários disponíveis:")
-        print("-" * 50)
-        for slot in menu:
-            time = menu[slot].split("T")[1].split(".")[0]
-            print(f"({slot}) : {time}")
-        print("-" * 50)
-        
-        value = input(input_text).strip()
-
-        if validator(value, menu):
-            return int(value)
